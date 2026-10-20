@@ -1,0 +1,5 @@
+pytest>=8
+# added in later weeks:
+# pyspark
+# mlflow
+# fastapi

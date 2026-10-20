@@ -1,5 +1,6 @@
 pytest>=8
-# added in later weeks:
+# optional: runs the Silver rule tests locally (needs Java 17+)
 # pyspark
+# added in later weeks:
 # mlflow
 # fastapi

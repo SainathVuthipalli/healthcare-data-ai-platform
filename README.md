@@ -9,8 +9,8 @@ numbers carry a `SYN-` prefix so they cannot be mistaken for real identifiers.
 
 ## Status
 
-- [x] Week 1: seeded data generator with injected bad and late records (this commit)
-- [ ] Week 2: Bronze (Auto Loader) and Silver (quarantine, idempotent MERGE)
+- [x] Week 1: seeded data generator with injected bad and late records
+- [ ] Week 2: Bronze (Auto Loader) and Silver (quarantine, idempotent MERGE). Code and local tests are done; run it in Databricks with `docs/week-02.md`
 - [ ] Week 3: Gold tables and reconciliation
 - [ ] Week 4: Unity Catalog masks, row filters, lineage
 - [ ] Weeks 5-6: MLflow model, embeddings, vector index
@@ -26,7 +26,7 @@ pytest
 ```
 
 The generator uses only the Python standard library. The same seed always produces
-byte-identical files.
+byte-identical files. The Silver rule tests need PySpark and Java; without them they are skipped.
 
 ## What it generates
 
@@ -74,7 +74,12 @@ Each defect type hits a distinct set of rows, so counts in `manifest.json` are e
 
 ```
 src/generate_data.py     generator and CLI
-tests/test_generator.py  pytest suite
-docs/day-01.md           notes, exercises, interview practice
+src/platform_config.py   catalog, schema, volume and table names
+src/silver_rules.py      validation, quarantine and upsert rules (pure PySpark)
+src/reconcile.py         compares pipeline counts with the manifest
+notebooks/               Databricks notebooks: 01 Bronze, 02 Silver, 03 reconcile
+tests/                   generator, rules and reconciliation tests
+docs/day-01.md           Week 1 notes, exercises, interview practice
+docs/week-02.md          Week 2 run guide, expected numbers, interview practice
 data/                    generated files (git-ignored)
 ```

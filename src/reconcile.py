@@ -45,6 +45,19 @@ def reconcile_file(manifest: dict, file_name: str, metrics: dict) -> list[Check]
     return checks
 
 
+def reconcile_layers(totals: dict, silver_provider_count: int) -> list[Check]:
+    """Gold must equal Silver: no claim lost, none counted twice, no amount drift."""
+    return [
+        Check("gold monthly claims equal silver claims", totals["silver_claims"], totals["monthly_claims"]),
+        Check("gold provider claims equal silver claims", totals["silver_claims"], totals["provider_claims"]),
+        Check("gold monthly amount equals silver amount", totals["silver_amount"], totals["monthly_amount"]),
+        Check("gold provider amount equals silver amount", totals["silver_amount"], totals["provider_amount"]),
+        Check("outside-coverage claims agree across gold tables",
+              totals["monthly_outside_coverage"], totals["provider_outside_coverage"]),
+        Check("one provider KPI row per silver provider", silver_provider_count, totals["provider_rows"]),
+    ]
+
+
 def format_report(file_name: str, checks: list[Check]) -> str:
     lines = [f"Reconciliation for {file_name}"]
     for c in checks:

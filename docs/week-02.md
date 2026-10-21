@@ -51,7 +51,7 @@ If yours differ, the difference is the thing to investigate, so tell me which ro
 
 ## Local tests (optional on Windows)
 
-`pytest` runs the 46 plain tests. The 14 Spark tests are skipped unless you `pip install pyspark`
+`pytest` runs the plain tests. The Spark tests are skipped unless you `pip install pyspark`
 and have Java 17 or newer, which is more setup than it is worth on Windows. They have already passed on Linux.
 
 ## Screenshots worth taking for the README

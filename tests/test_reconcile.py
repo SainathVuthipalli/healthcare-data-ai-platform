@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from reconcile import format_report, reconcile_file  # noqa: E402
+from reconcile import format_report, reconcile_file, reconcile_layers  # noqa: E402
 
 MANIFEST = {
     "row_counts": {"claims_batch_1.csv": 120, "claims_batch_2.csv": 130},
@@ -85,3 +85,42 @@ def test_report_marks_failures():
     text = format_report("claims_batch_1.csv", reconcile_file(MANIFEST, "claims_batch_1.csv", bad))
     assert "[FAIL] in-file duplicates removed" in text
     assert "check(s) failed" in text
+
+
+# ---------- Gold versus Silver ----------
+
+GOOD_TOTALS = {
+    "silver_claims": 1000, "silver_amount": "123456.78",
+    "monthly_claims": 1000, "monthly_amount": "123456.78", "monthly_outside_coverage": 12,
+    "provider_claims": 1000, "provider_amount": "123456.78", "provider_outside_coverage": 12,
+    "provider_rows": 20,
+}
+
+
+def test_matching_layers_pass():
+    assert failed(reconcile_layers(GOOD_TOTALS, 20)) == []
+
+
+def test_a_lost_claim_in_gold_is_caught():
+    bad = dict(GOOD_TOTALS, monthly_claims=999)
+    assert failed(reconcile_layers(bad, 20)) == ["gold monthly claims equal silver claims"]
+
+
+def test_a_double_counted_claim_in_gold_is_caught():
+    bad = dict(GOOD_TOTALS, provider_claims=1001)
+    assert failed(reconcile_layers(bad, 20)) == ["gold provider claims equal silver claims"]
+
+
+def test_one_cent_of_amount_drift_is_caught():
+    bad = dict(GOOD_TOTALS, provider_amount="123456.79")
+    assert failed(reconcile_layers(bad, 20)) == ["gold provider amount equals silver amount"]
+
+
+def test_gold_tables_disagreeing_on_coverage_is_caught():
+    bad = dict(GOOD_TOTALS, provider_outside_coverage=11)
+    assert failed(reconcile_layers(bad, 20)) == ["outside-coverage claims agree across gold tables"]
+
+
+def test_a_missing_provider_row_is_caught():
+    bad = dict(GOOD_TOTALS, provider_rows=19)
+    assert failed(reconcile_layers(bad, 20)) == ["one provider KPI row per silver provider"]

@@ -10,8 +10,8 @@ numbers carry a `SYN-` prefix so they cannot be mistaken for real identifiers.
 ## Status
 
 - [x] Week 1: seeded data generator with injected bad and late records
-- [ ] Week 2: Bronze (Auto Loader) and Silver (quarantine, idempotent MERGE). Code and local tests are done; run it in Databricks with `docs/week-02.md`
-- [ ] Week 3: Gold tables and reconciliation
+- [x] Week 2: Bronze (Auto Loader) and Silver (quarantine, idempotent MERGE), reconciled to the manifest
+- [ ] Week 3: Silver reference tables, Gold aggregates, Gold-vs-Silver reconciliation. Code and local tests are done; run it in Databricks with `docs/week-03.md`
 - [ ] Week 4: Unity Catalog masks, row filters, lineage
 - [ ] Weeks 5-6: MLflow model, embeddings, vector index
 - [ ] Weeks 7-8: RAG service and evaluation
@@ -76,10 +76,12 @@ Each defect type hits a distinct set of rows, so counts in `manifest.json` are e
 src/generate_data.py     generator and CLI
 src/platform_config.py   catalog, schema, volume and table names
 src/silver_rules.py      validation, quarantine and upsert rules (pure PySpark)
-src/reconcile.py         compares pipeline counts with the manifest
-notebooks/               Databricks notebooks: 01 Bronze, 02 Silver, 03 reconcile
+src/gold_rules.py        Silver reference builders and Gold aggregates (pure PySpark)
+src/reconcile.py         compares pipeline counts with the manifest and Gold with Silver
+notebooks/               Databricks notebooks: 01 Bronze, 02 Silver, 03 reconcile, 04 reference, 05 Gold
 tests/                   generator, rules and reconciliation tests
 docs/day-01.md           Week 1 notes, exercises, interview practice
 docs/week-02.md          Week 2 run guide, expected numbers, interview practice
+docs/week-03.md          Week 3 run guide, expected numbers, interview practice
 data/                    generated files (git-ignored)
 ```

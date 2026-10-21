@@ -30,6 +30,15 @@ from reconcile import format_report, reconcile_layers
 
 # COMMAND ----------
 
+# Guard: if a row filter on silver_patients hides patients from the user running this notebook, Gold would
+# silently be built with missing plans. The pipeline must run as a steward (see notebook 06).
+visible = spark.table(cfg.SILVER_PATIENTS).count()
+expected = spark.table(cfg.BRONZE_PATIENTS).select("patient_id").distinct().count()
+assert visible == expected, (
+    f"You can see {visible} of {expected} patients, so Gold would be wrong. "
+    "Run this notebook as a steward: run the last cells of notebook 06 or set your role to steward."
+)
+
 silver_claims = spark.table(cfg.SILVER_CLAIMS)
 silver_patients = spark.table(cfg.SILVER_PATIENTS)
 silver_providers = spark.table(cfg.SILVER_PROVIDERS)

@@ -7,6 +7,7 @@
 # MAGIC - Reference files are snapshots, so each run rebuilds the Silver table from Bronze (overwrite). Re-running gives the same result.
 # MAGIC - `silver_patients` keeps names, date of birth and the (fake) health card number. These are the sensitive columns that Week 4 protects with column masks and row filters.
 # MAGIC - Gold deliberately never reads those columns.
+# MAGIC - If you have already run notebook 06, run this one as a `steward`. If the masks or row filter are missing afterwards, re-run the "Attach the policies" cell in 06.
 
 # COMMAND ----------
 

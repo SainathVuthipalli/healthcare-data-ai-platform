@@ -11,8 +11,8 @@ numbers carry a `SYN-` prefix so they cannot be mistaken for real identifiers.
 
 - [x] Week 1: seeded data generator with injected bad and late records
 - [x] Week 2: Bronze (Auto Loader) and Silver (quarantine, idempotent MERGE), reconciled to the manifest
-- [ ] Week 3: Silver reference tables, Gold aggregates, Gold-vs-Silver reconciliation. Code and local tests are done; run it in Databricks with `docs/week-03.md`
-- [ ] Week 4: Unity Catalog masks, row filters, lineage
+- [x] Week 3: Silver reference tables, Gold aggregates, Gold-vs-Silver reconciliation
+- [ ] Week 4: Unity Catalog masks, row filter, lineage. Code and local tests are done; run it in Databricks with `docs/week-04.md`
 - [ ] Weeks 5-6: MLflow model, embeddings, vector index
 - [ ] Weeks 7-8: RAG service and evaluation
 - [ ] Weeks 9-10: Docker, CI, monitoring, demo
@@ -77,11 +77,13 @@ src/generate_data.py     generator and CLI
 src/platform_config.py   catalog, schema, volume and table names
 src/silver_rules.py      validation, quarantine and upsert rules (pure PySpark)
 src/gold_rules.py        Silver reference builders and Gold aggregates (pure PySpark)
+src/governance_sql.py    SQL for column masks, the row filter and the roles table
 src/reconcile.py         compares pipeline counts with the manifest and Gold with Silver
-notebooks/               Databricks notebooks: 01 Bronze, 02 Silver, 03 reconcile, 04 reference, 05 Gold
+notebooks/               Databricks notebooks: 01 Bronze, 02 Silver, 03 reconcile, 04 reference, 05 Gold, 06 governance
 tests/                   generator, rules and reconciliation tests
 docs/day-01.md           Week 1 notes, exercises, interview practice
 docs/week-02.md          Week 2 run guide, expected numbers, interview practice
 docs/week-03.md          Week 3 run guide, expected numbers, interview practice
+docs/week-04.md          Week 4 governance guide, lineage, resume v1, interview practice
 data/                    generated files (git-ignored)
 ```
